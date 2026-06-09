@@ -3,161 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Integration Animation: y = x² - 2x + 3</title>
+    <title>Integration Visualizer</title>
     <style>
-        :root {
-            --primary: #2563eb;
-            --secondary: #10b981;
-            --background: #f8fafc;
-            --panel: #ffffff;
-            --text: #1e293b;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
             margin: 0;
             padding: 20px;
-            background-color: var(--background);
-            color: var(--text);
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
         }
-
-        h1 {
-            margin-bottom: 5px;
-            font-size: 1.5rem;
-        }
-
-        .equation {
-            font-style: italic;
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
         .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            max-width: 1000px;
+            max-width: 800px;
             width: 100%;
-            justify-content: center;
-        }
-
-        .canvas-container {
-            background: var(--panel);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            padding: 15px;
-            position: relative;
-        }
-
-        canvas {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            display: block;
-        }
-
-        .controls {
-            background: var(--panel);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            background: white;
             padding: 25px;
-            width: 320px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            margin-top: 0;
+        }
+        .equation-box {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1967d2;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
         }
-
         label {
-            font-weight: 600;
             font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .val-display {
-            color: var(--primary);
-            font-family: monospace;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            accent-color: var(--primary);
-        }
-
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            margin-bottom: 5px;
+            color: #5f6368;
         }
-
-        .btn-play {
-            background-color: var(--primary);
+        input {
+            padding: 8px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #1a73e8;
             color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            grid-column: 1 / -1;
+            transition: background 0.2s;
         }
-
-        .btn-play:hover { background-color: #1d4ed8; }
-
-        .btn-reset {
-            background-color: #e2e8f0;
-            color: var(--text);
+        button:hover {
+            background-color: #1557b0;
         }
-
-        .btn-reset:hover { background-color: #cbd5e1; }
-
-        .stats {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-            font-size: 0.95rem;
+        .canvas-container {
+            position: relative;
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            justify-content: center;
         }
-
-        .stats-row {
-            display: flex;
-            justify-content: space-between;
+        canvas {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+            max-width: 100%;
         }
-
-        .stats-val {
-            font-family: monospace;
-            font-weight: bold;
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1a73e8;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
-    <h1>Definite Integration Animation</h1>
-    <div class="equation">f(x) = x² - 2x + 3</div>
+<div class="container">
+    <h1>Integration Calculator & Visualizer</h1>
+    
+    <div class="equation-box">
+        f(x) = x² - 2x + 6
+    </div>
 
-    <div class="container">
-        <div class="canvas-container">
-            <canvas id="graphCanvas" width="550" height="450"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <label for="lowerBound">Lower Bound (a):</label>
+            <input type="number" id="lowerBound" value="0" step="0.5">
         </div>
+        <div class="control-group">
+            <label for="upperBound">Upper Bound (b):</label>
+            <input type="number" id="upperBound" value="3" step="0.5">
+        </div>
+        <button onclick="startAnimation()">Animate & Calculate</button>
+    </div>
 
-        <div class="controls">
-            <div class="control-group">
-                <label>Lower Limit (a): <span id="lbl-a" class="val-display">0.0</span></label>
-                <input type="range" id="input-a" min="-1" max="4" step="0.1" value="0">
-            </div>
+    <div class="canvas-container">
+        <canvas id="plotCanvas" width="600" height="400"></canvas>
+    </div>
+
+    <div class="results" id="resultBox">
+        Click "Animate & Calculate" to view the definite integral.
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('plotCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Define the function f(x) = x^2 - 2x + 6
+    function f(x) {
+        return x*x - 2*x + 6;
+    }
+
+    // Exact analytical anti-derivative for math accuracy: F(x) = (x^3)/3 - x^2 + 6x
+    function F(x) {
+        return (Math.pow(x, 3) / 3) - Math.pow(x, 2) + (6 * x);
+    }
+
+    // Graph setup configuration
+    const minX = -2, maxX = 5;
+    const minY = -2, maxY = 25;
+    
+    // Pixel conversion functions
+    function toPixelX(x) {
+        return ((x - minX) / (maxX - minX)) * canvas.width;
+    }
+    function toPixelY(y) {
+        return canvas.height - (((y - minY) / (maxY - minY)) * canvas.height);
+    }
+
+    let animationProgress = 0;
+    let animationId = null;
+
+    function drawAxes() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Grid lines
+        ctx.strokeStyle = '#eef0f2';
+        ctx.lineWidth = 1;
+        for(let i = Math.ceil(minX); i <= maxX; i++) {
+            ctx.beginPath();
+            ctx.moveTo(toPixelX(i), 0);
+            ctx.lineTo(toPixelX(i), canvas.height);
+            ctx.stroke();
+        }
+        for(let i = Math.ceil(minY); i <= maxY; i += 2) {
+            ctx.beginPath();
+            ctx.moveTo(0, toPixelY(i));
+            ctx.lineTo(canvas.width, toPixelY(i));
+            ctx.stroke();
+        }
+
+        // Main Axes
+        ctx.strokeStyle = '#b2b9c0';
+        ctx.lineWidth = 2;
+        // X-axis
+        ctx.beginPath();
+        ctx.moveTo(0, toPixelY(0));
+        ctx.lineTo(canvas.width, toPixelY(0));
+        ctx.stroke();
+        // Y-axis
+        ctx.beginPath();
+        ctx.moveTo(toPixelX(0), 0);
+        ctx.lineTo(toPixelX(0), canvas.height);
+        ctx.stroke();
+    }
+
+    function drawFunction() {
+        ctx.strokeStyle = '#1a73e8';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        
+        let first = true;
+        for (let px = 0; px <= canvas.width; px++) {
+            let x = minX + (px / canvas.width) * (maxX - minX);
+            let y = f(x);
+            if (first) {
+                ctx.moveTo(px, toPixelY(y));
+                first = false;
+            } else {
+                ctx.lineTo(px, toPixelY(y));
+            }
+        }
+        ctx.stroke();
+    }
+
+    function animateIntegral(a, b) {
+        if (animationProgress > 1) {
+            cancelAnimationFrame(animationId);
+            const area = F(b) - F(a);
+            document.getElementById('resultBox').innerHTML = `<strong>Definite Integral Result:</strong> ∫₀³ (x² - 2x + 6) dx = <strong>${area.toFixed(4)}</strong>`;
+            return;
+        }
+
+        drawAxes();
+        
+        // Dynamic boundary based on current frame animation progress
+        let currentB = a + (b - a) * animationProgress;
+
+        // Shade the integration area
+        ctx.fillStyle = 'rgba(26, 115, 232, 0.3)';
+        ctx.beginPath();
+        ctx.moveTo(toPixelX(a), toPixelY(0));
+
+        for (let px = toPixelX(a); px <= toPixelX(currentB); px++) {
+            let x = minX + (px / canvas.width) * (maxX - minX);
+            ctx.lineTo(px, toPixelY(f(x)));
+        }
+        
+        ctx.lineTo(toPixelX(currentB), toPixelY(0));
+        ctx.closePath();
+        ctx.fill();
+
+        drawFunction();
+
+        animationProgress += 0.015; // Animation speed controller
+        animationId = requestAnimationFrame(() => animateIntegral(a, b));
+    }
+
+    function startAnimation() {
+        if (animationId) cancelAnimationFrame(animationId);
+        
+        const a = parseFloat(document.getElementById('lowerBound').value);
+        const b = parseFloat(document.getElementById('upperBound').value);
+        
+        if (isNaN(a) || isNaN(b)) {
+            alert("Please enter valid numbers for boundaries.");
+            return;
+        }
+        
+        animationProgress = 0;
+        animateIntegral(a, b);
+    }
+
+    // Initial load screen render
+    drawAxes();
+    drawFunction();
+</script>
+
+</body>
+</html>
